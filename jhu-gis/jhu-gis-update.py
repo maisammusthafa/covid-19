@@ -42,6 +42,7 @@ for category in categories:
 write_to_excel('data/jhu_gis_total.xlsx', df)
 
 for category in categories:
+    df[category][today] = df[category][today].astype('float')
     df[category] = df[category].set_index('Country_Region').diff(axis=1).reset_index()
 
 write_to_excel('data/jhu_gis_diff.xlsx', df)
