@@ -34,7 +34,8 @@ for category in categories:
     df[category] = pandas.read_excel('data/jhu_gis_total.xlsx', sheet_name=category).drop(columns=[today], errors='ignore')
     df_new[category] = df_global[['Country_Region', category]].rename(columns={category: today})
 
-    df[category] = pandas.merge(df[category], df_new[category], on='Country_Region', validate='one_to_one')
+    df[category] = pandas.merge(df[category], df_new[category], on='Country_Region', how='outer', validate='one_to_one')
+    df[category] = df[category].sort_values(by=['Country_Region'])
     # df[category] = df[category].reset_index()
     # df[category] = df[category].set_index('Country_Region').T.rename_axis('Date').reset_index()
 
