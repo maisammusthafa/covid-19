@@ -20,10 +20,10 @@ column_desc = {
     'NewDeaths': 'New Deaths',
     'TotalRecovered': 'Total Recovered',
     'ActiveCases': 'Active Cases',
-    'Serious_Critical': 'Serious Critical',
+    'Serious_Critical': 'Serious, Critical',
     'TotCases_1M_Pop': 'Total Cases / 1M Pop',
     'Deaths/1M pop': 'Deaths / 1M Pop',
-    '1stcase': 'First Case',
+    'Reported1st case': 'Reported First Case',
 }
 
 column_names = [name for name, desc in column_desc.items()]
@@ -37,8 +37,8 @@ dfs = {}
 for index, day in enumerate(days):
     dfs[day] = pandas.DataFrame(df_main['table'][0][index])
     dfs[day] = dfs[day][column_names].replace(r'^\s*$', np.nan, regex=True)
-    dfs[day]['1stcase'] = '2020 ' + dfs[day]['1stcase']
-    dfs[day]['1stcase'] = pandas.to_datetime(dfs[day]['1stcase'], format='%Y %b %d').dt.strftime('%Y-%m-%d')
+    dfs[day]['Reported1st case'] = '2020 ' + dfs[day]['Reported1st case']
+    dfs[day]['Reported1st case'] = pandas.to_datetime(dfs[day]['Reported1st case'], format='%Y %b %d').dt.strftime('%Y-%m-%d')
 
     for column in column_names[1:-1]:
         dfs[day][column] = dfs[day][column].replace('\+|-|,', '', regex=True).astype(float)
@@ -64,7 +64,7 @@ with pandas.ExcelWriter(file_name, engine='xlsxwriter') as writer:
         sheet.set_column('B:E', 12)
         sheet.set_column('F:H', 15)
         sheet.set_column('I:J', 19)
-        sheet.set_column('K:K', 12)
+        sheet.set_column('K:K', 19)
         sheet.freeze_panes(1, 1)
 
 writer.save()
