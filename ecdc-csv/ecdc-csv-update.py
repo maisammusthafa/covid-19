@@ -6,7 +6,7 @@ import urllib.request
 source_data_url = 'https://opendata.ecdc.europa.eu/covid19/casedistribution/csv'
 urllib.request.urlretrieve(source_data_url, 'source_data.csv')
 
-df_source = pandas.read_csv('source_data.csv', encoding='latin1')
+df_source = pandas.read_csv('source_data.csv', encoding='utf-8')
 categories = ['cases', 'deaths']
 dfs = {}
 
