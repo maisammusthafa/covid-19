@@ -41,7 +41,7 @@ def write_to_excel(file_name, data_categories):
 
 
 def main():
-    # download_source_data()
+    download_source_data()
     process_data()
 
     write_to_excel('data/ecdc_csv_total.xlsx', {'total_cases': 'Confirmed', 'total_deaths': 'Deaths'})
