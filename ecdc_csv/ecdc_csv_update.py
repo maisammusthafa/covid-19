@@ -18,7 +18,7 @@ def process_data():
         df = df.pivot(index='dateRep', columns='countriesAndTerritories', values=category)
 
         df = pd.DataFrame(df.to_records()).rename(columns={'dateRep': 'Date'})
-        df['Date'] = pd.to_datetime(df['Date'], format='%d/%m/%Y').dt.date
+        df['Date'] = pd.to_datetime(df['Date'], format='%d/%m/%Y')
         df = df.sort_values(by=['Date']).set_index('Date')
 
         df.columns = df.columns.str.replace('_', ' ')
@@ -35,12 +35,16 @@ def process_data():
 def write_to_excel(file_name, data_categories, dfs):
     with pd.ExcelWriter(file_name, engine='xlsxwriter') as writer:
         for category, name in data_categories.items():
-            dfs[category].reset_index(inplace=True)
-            dfs[category].to_excel(writer, sheet_name=name, index=False)
+            df = dfs[category]
+            df.index = df.index.date
+            df.reset_index(inplace=True)
+            df.to_excel(writer, sheet_name=name, index=False)
 
         for sheet in writer.sheets.values():
             sheet.set_column('A:A', 12)
             sheet.freeze_panes(1, 1)
+
+    writer.save()
 
 
 def main():
