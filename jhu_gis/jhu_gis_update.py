@@ -1,10 +1,12 @@
 #!/bin/env python3
 
+import warnings
+warnings.filterwarnings('ignore', category=FutureWarning)  # caused by arcgis
+
 import pandas
 from arcgis.gis import GIS
 from arcgis.features import FeatureLayer
 from datetime import datetime
-
 
 today = datetime.today().strftime('%Y-%m-%d')
 categories = ['Confirmed', 'Deaths', 'Recovered', 'Active']
@@ -59,7 +61,10 @@ def process_and_write_data(df_global):
 
 
 def main():
+    print('JHU-GIS: Retrieving source data')
     df_global = get_source_data()
+
+    print('JHU-GIS: Processing and writing to excel')
     process_and_write_data(df_global)
 
 

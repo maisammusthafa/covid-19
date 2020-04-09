@@ -48,7 +48,10 @@ def write_to_excel(file_name, data_categories, dfs):
 
 
 def main():
+    print('ECDC-CSV: Retrieving source data')
     download_source_data()
+
+    print('ECDC-CSV: Processing and writing to excel')
     dfs = process_data()
 
     total = {

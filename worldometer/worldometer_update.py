@@ -72,7 +72,10 @@ def write_to_excel():
 
 
 def main():
+    print('Worldometer: Retrieving source data')
     download_source_data()
+
+    print('Worldometer: Processing and writing to excel')
     process_data()
     write_to_excel()
 
