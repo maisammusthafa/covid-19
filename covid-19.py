@@ -6,6 +6,7 @@ import sys
 import ecdc_csv.ecdc_csv_update as ecdc_csv
 import jhu_gis.jhu_gis_update as jhu_gis
 import worldometer.worldometer_update as worldometer
+import gdrive_api as gdrive
 
 
 def call_module_func(func):
@@ -24,6 +25,14 @@ def call_module_func(func):
     return result
 
 
+print('Updating data files')
+print('--------------------')
+
 call_module_func(worldometer.main)
 call_module_func(ecdc_csv.main)
 call_module_func(jhu_gis.main)
+
+print('\nPushing updates to Google Drive')
+print('--------------------------------')
+
+gdrive.main()
