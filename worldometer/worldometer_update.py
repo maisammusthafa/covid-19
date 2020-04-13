@@ -9,7 +9,9 @@ dfs = {}
 
 
 def download_source_data():
-    return_code = call(['node', '--unhandled-rejections=strict', 'worldometer-api/index.js'])
+    return_code = call([
+        'node', '--unhandled-rejections=strict', 'worldometer-api/index.js'
+    ])
 
     if (return_code != 0):
         exit()
@@ -26,7 +28,9 @@ def process_data():
         'ActiveCases': 'Active Cases',
         'Serious_Critical': 'Serious, Critical',
         'TotCases_1M_Pop': 'Total Cases / 1M Pop',
-        'Deaths/1M pop': 'Deaths / 1M Pop',
+        'Deaths_1M_pop': 'Deaths / 1M Pop',
+        'TotalTests': 'Total Tests',
+        'Tests_1M_Pop': 'Tests / 1M Pop',
     }
 
     column_names = [name for name, desc in column_desc.items()]
@@ -36,10 +40,14 @@ def process_data():
 
     for index, day in enumerate(days):
         dfs[day] = pandas.DataFrame(df_main['table'][0][index])
-        dfs[day] = dfs[day][column_names].replace(r'^\s*$', np.nan, regex=True)
 
-        for column in column_names[1:]:
-            dfs[day][column] = dfs[day][column].replace('\+|-|,', '', regex=True).astype(float)
+        dfs[day] = dfs[day][column_names].replace(
+            r'(^\s*$)|(N\/A)', np.nan, regex=True
+        )
+
+        dfs[day][column_names[1:]] = dfs[day][column_names[1:]].replace(
+            '\+|-|,', '', regex=True
+        ).astype(float)
 
         world_index = dfs[day].Country == 'Total:'
         dfs[day].loc[(world_index, 'Country')] = 'World'
@@ -59,13 +67,18 @@ def write_to_excel():
 
     with pandas.ExcelWriter(file_name, engine='xlsxwriter') as writer:
         dfs['yesterday'].to_excel(writer, sheet_name=yesterday, index=False)
-        dfs['today'].to_excel(writer, sheet_name='{} (7 pm)'.format(today), index=False)
+
+        dfs['today'].to_excel(
+            writer, sheet_name='{} (7 pm)'.format(today), index=False
+        )
 
         for sheet in writer.sheets.values():
             sheet.set_column('A:A', 22)
             sheet.set_column('B:E', 12)
             sheet.set_column('F:H', 15)
             sheet.set_column('I:J', 19)
+            sheet.set_column('K:K', 12)
+            sheet.set_column('L:L', 15)
             sheet.freeze_panes(1, 1)
 
     writer.save()
