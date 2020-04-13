@@ -8,6 +8,10 @@ import jhu_gis.jhu_gis_update as jhu_gis
 import worldometer.worldometer_update as worldometer
 import gdrive_api as gdrive
 
+abspath = os.path.abspath(__file__)
+dirname = os.path.dirname(abspath)
+os.chdir(dirname)
+
 
 def call_module_func(func):
     base_path = os.path.abspath(os.getcwd())
