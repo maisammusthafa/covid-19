@@ -37,6 +37,7 @@ def write_to_excel(file_name, data_categories, dfs):
         for category, name in data_categories.items():
             df = dfs[category]
             df.index = df.index.date
+            df.index.name = 'Date'
             df.reset_index(inplace=True)
             df.to_excel(writer, sheet_name=name, index=False)
 
